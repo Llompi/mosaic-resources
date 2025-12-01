@@ -55,15 +55,15 @@ We **encourage and welcome** community contributions! However:
 ## 🚀 Usage
 
 ### Direct Hosting
-Visit the live widget at: `https://YOUR-USERNAME.github.io/REPO-NAME/`
+Visit the live widget at: https://mosaicpnw.org/books
 
 ### Embedding
 Embed anywhere using an iframe:
-```
-<iframe 
-  src="https://YOUR-USERNAME.github.io/REPO-NAME/" 
-  width="100%" 
-  height="800" 
+```html
+<iframe
+  src="https://mosaicpnw.org/books"
+  width="100%"
+  height="800"
   frameborder="0"
   title="Community Resources">
 </iframe>
@@ -124,7 +124,7 @@ See [LICENSE](LICENSE) file for full legal text.
 
 - [Report an Issue](../../issues/new)
 - [Submit a Pull Request](../../pulls)
-- [View Live Demo](https://YOUR-USERNAME.github.io/REPO-NAME/)
+- [View Live Demo](https://mosaicpnw.org/books)
 
 ## 💬 Support
 
