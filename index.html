@@ -1,967 +1,618 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Widget</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Resource Widget</title>
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
-
-
-
-<style>
-
+  <style>
     /* Scoped Root Variable Definition */
-
     #resource-widget-root {
+      /* Brand Colors */
+      --rw-white: #ffffff;
+      --rw-slate: #45595a;
+      --rw-dark-slate: #3c504f;
+      --rw-gold: #e9b872;
 
-        /* Brand Colors */
+      /* Typography */
+      --rw-font-heading: 'adobe-caslon-pro', 'Times New Roman', serif;
+      --rw-font-body: 'freight-text-pro', Georgia, serif;
 
-        --rw-white: #ffffff;
+      /* Glass & Lighting */
+      --rw-glass-bg: rgba(255, 255, 255, 0.65);
+      --rw-glass-highlight: rgba(255, 255, 255, 0.95);
+      --rw-glass-border: rgba(255, 255, 255, 0.5);
+      --rw-shadow-soft: 0 8px 32px rgba(60, 80, 79, 0.08);
+      --rw-glow-active: 0 0 25px rgba(233, 184, 114, 0.25);
+      --rw-focus-ring: 0 0 0 2px rgba(233, 184, 114, 0.6);
 
-        --rw-slate: #45595a;      
+      /* Animation Timing */
+      --rw-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --rw-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
-        --rw-dark-slate: #3c504f; 
-
-        --rw-gold: #e9b872;        
-
-        /* Typography */
-
-        --rw-font-heading: 'adobe-caslon-pro', 'Times New Roman', serif;
-
-        --rw-font-body: 'freight-text-pro', Georgia, serif;
-
-
-
-        /* Glass & Lighting */
-
-        --rw-glass-bg: rgba(255, 255, 255, 0.65);
-
-        --rw-glass-highlight: rgba(255, 255, 255, 0.95);
-
-        --rw-glass-border: rgba(255, 255, 255, 0.5); 
-
-        --rw-shadow-soft: 0 8px 32px rgba(60, 80, 79, 0.08); 
-
-        --rw-glow-active: 0 0 25px rgba(233, 184, 114, 0.25);
-
-        --rw-focus-ring: 0 0 0 2px rgba(233, 184, 114, 0.6);
-
-        /* Animation Timing */
-
-        --rw-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-        --rw-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-
-        font-family: var(--rw-font-body);
-
-        color: var(--rw-dark-slate);
-
-        max-width: 800px;
-
-        margin: 0 auto;
-
-        padding: 1rem;
-
-        box-sizing: border-box;
-
+      font-family: var(--rw-font-body);
+      color: var(--rw-dark-slate);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      box-sizing: border-box;
     }
 
-
-
-    #resource-widget-root *, 
-
-    #resource-widget-root *::before, 
-
+    #resource-widget-root *,
+    #resource-widget-root *::before,
     #resource-widget-root *::after {
-
-        box-sizing: border-box;
-
+      box-sizing: border-box;
     }
-
-
 
     /* --- Widget Header --- */
-
     .rw-widget-title {
-
-        font-family: var(--rw-font-heading);
-
-        font-weight: 400;
-
-        font-style: italic; 
-
-        font-size: 1.6rem;
-
-        text-align: center;
-
-        color: var(--rw-slate);
-
-        margin-bottom: 1.5rem;
-
-        letter-spacing: 0.02em;
-
-        opacity: 0;
-
-        animation: rwFadeIn 0.8s ease forwards;
-
+      font-family: var(--rw-font-heading);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 1.6rem;
+      text-align: center;
+      color: var(--rw-slate);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      animation: rwFadeIn 0.8s ease forwards;
     }
 
-
-
-    @keyframes rwFadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
-
+    @keyframes rwFadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* --- Navigation Tabs (Tablist) --- */
-
     .rw-nav-container {
-
-        display: flex;
-
-        justify-content: center;
-
-        width: fit-content; 
-
-        margin: 0 auto 2rem auto; 
-
-        background: rgba(69, 89, 90, 0.08);
-
-        backdrop-filter: blur(12px);
-
-        -webkit-backdrop-filter: blur(12px);
-
-        padding: 0.5rem; /* Reduced padding slightly to tighten layout */
-
-        border-radius: 50px;
-
-        border: 1px solid var(--rw-glass-border);
-
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-
-        gap: 0.5rem; 
-
+      display: flex;
+      justify-content: center;
+      width: fit-content;
+      margin: 0 auto 2rem auto;
+      background: rgba(69, 89, 90, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.5rem;
+      border-radius: 50px;
+      border: 1px solid var(--rw-glass-border);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+      gap: 0.5rem;
     }
-
-
 
     .rw-nav-btn {
-
-        background: transparent;
-
-        border: none;
-
-        padding: 10px 24px;
-
-        font-family: var(--rw-font-body); 
-
-        font-weight: 600;
-
-        color: var(--rw-slate);
-
-        cursor: pointer;
-
-        border-radius: 40px;
-
-        transition: all 0.4s var(--rw-ease-smooth);
-
-        position: relative;
-
-        font-size: 1.05rem;
-
-        outline: none;
-
-        white-space: nowrap;
-
-        letter-spacing: 0.03em;
-
-        /* FIX 1: Add min-width so buttons don't resize dramatically */
-
-        min-width: 100px; 
-
+      background: transparent;
+      border: none;
+      padding: 10px 24px;
+      font-family: var(--rw-font-body);
+      font-weight: 600;
+      color: var(--rw-slate);
+      cursor: pointer;
+      border-radius: 40px;
+      transition: all 0.4s var(--rw-ease-smooth);
+      position: relative;
+      font-size: 1.05rem;
+      outline: none;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      min-width: 100px;
     }
-
-
 
     .rw-nav-btn:focus-visible {
-
-        box-shadow: var(--rw-focus-ring);
-
+      box-shadow: var(--rw-focus-ring);
     }
-
-
 
     .rw-nav-btn:hover {
-
-        background: rgba(255,255,255,0.4);
-
-        color: var(--rw-dark-slate);
-
+      background: rgba(255,255,255,0.4);
+      color: var(--rw-dark-slate);
     }
-
-
 
     .rw-nav-btn[aria-selected="true"] {
-
-        background: var(--rw-white);
-
-        color: var(--rw-dark-slate);
-
-        box-shadow: 0 4px 15px rgba(60, 80, 79, 0.05), var(--rw-glow-active);
-
-        transform: translateY(-1px);
-
-        /* FIX 1: REMOVED font-family switch. 
-
-           Keeping the font consistent prevents the "Jumping" effect. */
-
-        font-style: normal;
-
+      background: var(--rw-white);
+      color: var(--rw-dark-slate);
+      box-shadow: 0 4px 15px rgba(60, 80, 79, 0.05), var(--rw-glow-active);
+      transform: translateY(-1px);
+      font-style: normal;
     }
-
-
 
     /* --- Main Content Area --- */
-
     .rw-content-area {
-
-        min-height: 50px;
-
-        position: relative;
-
+      min-height: 50px;
+      position: relative;
     }
-
-
 
     .rw-city-pane {
-
-        display: none;
-
-        opacity: 0;
-
-        transform: translateY(10px);
-
-        transition: opacity 0.5s ease, transform 0.5s ease;
-
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
-
     .rw-city-pane.active {
-
-        display: block;
-
-        opacity: 1;
-
-        transform: translateY(0);
-
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
     }
-
-
 
     /* --- Accordion Groups --- */
-
     .rw-group-node {
-
-        margin-bottom: 1.2rem;
-
-        opacity: 0;
-
-        animation: rwSlideUpFade 0.6s var(--rw-ease-smooth) forwards;
-
-        animation-delay: var(--delay);
-
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: rwSlideUpFade 0.6s var(--rw-ease-smooth) forwards;
+      animation-delay: var(--delay);
     }
-
-
 
     @keyframes rwSlideUpFade {
-
-        from { opacity: 0; transform: translateY(15px); }
-
-        to { opacity: 1; transform: translateY(0); }
-
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-
-
 
     .rw-group-header {
-
-        width: 100%;
-
-        background: var(--rw-glass-bg);
-
-        border: 1px solid var(--rw-glass-border);
-
-        @supports not (backdrop-filter: blur(10px)) {
-
-            background: rgba(255, 255, 255, 0.9);
-
-        }
-
-        backdrop-filter: blur(10px);
-
-        -webkit-backdrop-filter: blur(10px);
-
-        padding: 1.1rem 1.8rem;
-
-        border-radius: 12px;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: space-between;
-
-        cursor: pointer;
-
-        transition: all 0.3s ease;
-
-        text-align: left;
-
-        color: var(--rw-dark-slate);
-
-        outline: none;
-
+      width: 100%;
+      background: var(--rw-glass-bg);
+      border: 1px solid var(--rw-glass-border);
+      @supports not (backdrop-filter: blur(10px)) {
+        background: rgba(255, 255, 255, 0.9);
+      }
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 1.1rem 1.8rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      color: var(--rw-dark-slate);
+      outline: none;
     }
-
-
 
     .rw-group-header:focus-visible {
-
-        box-shadow: var(--rw-focus-ring);
-
-        border-color: var(--rw-gold);
-
+      box-shadow: var(--rw-focus-ring);
+      border-color: var(--rw-gold);
     }
-
-
 
     .rw-group-header:hover {
-
-        background: var(--rw-glass-highlight);
-
-        transform: translateY(-2px);
-
-        box-shadow: var(--rw-shadow-soft);
-
-        border-color: var(--rw-white);
-
+      background: var(--rw-glass-highlight);
+      transform: translateY(-2px);
+      box-shadow: var(--rw-shadow-soft);
+      border-color: var(--rw-white);
     }
-
-
 
     .rw-group-header[aria-expanded="true"] {
-
-        background: var(--rw-white);
-
-        border-color: var(--rw-gold);
-
-        box-shadow: var(--rw-glow-active);
-
+      background: var(--rw-white);
+      border-color: var(--rw-gold);
+      box-shadow: var(--rw-glow-active);
     }
-
-
 
     .rw-group-title {
-
-        font-family: var(--rw-font-heading);
-
-        font-size: 1.25rem;
-
-        font-weight: 400;
-
-        pointer-events: none;
-
-        letter-spacing: 0.02em;
-
+      font-family: var(--rw-font-heading);
+      font-size: 1.25rem;
+      font-weight: 400;
+      pointer-events: none;
+      letter-spacing: 0.02em;
     }
-
-
 
     .rw-icon-rotator {
-
-        transition: transform 0.5s var(--rw-ease-spring);
-
-        color: var(--rw-gold);
-
-        pointer-events: none;
-
-        font-size: 1.4rem;
-
+      transition: transform 0.5s var(--rw-ease-spring);
+      color: var(--rw-gold);
+      pointer-events: none;
+      font-size: 1.4rem;
     }
-
-
 
     .rw-group-header[aria-expanded="true"] .rw-icon-rotator {
-
-        transform: rotate(90deg);
-
+      transform: rotate(90deg);
     }
-
-
 
     /* --- Accordion Content --- */
-
     .rw-group-content {
-
-        display: grid;
-
-        grid-template-rows: 0fr;
-
-        transition: grid-template-rows 0.6s var(--rw-ease-spring);
-
-        overflow: hidden;
-
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.6s var(--rw-ease-spring);
+      overflow: hidden;
     }
-
-
 
     .rw-group-content-inner {
-
-        min-height: 0;
-
-        padding: 0 0.8rem;
-
+      min-height: 0;
+      padding: 0 0.8rem;
     }
-
-
 
     /* Cards inside the list */
-
     .rw-resource-card {
-
-        background: rgba(255, 255, 255, 0.3);
-
-        border-left: 2px solid var(--rw-slate);
-
-        margin: 12px 0;
-
-        padding: 18px 22px;
-
-        border-radius: 0 8px 8px 0;
-
-        transition: all 0.3s ease;
-
-        opacity: 0;
-
-        transform: translateX(-10px);
-
+      background: rgba(255, 255, 255, 0.3);
+      border-left: 2px solid var(--rw-slate);
+      margin: 12px 0;
+      padding: 18px 22px;
+      border-radius: 0 8px 8px 0;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateX(-10px);
     }
-
-
 
     .rw-group-header[aria-expanded="true"] + .rw-group-content .rw-resource-card {
-
-        opacity: 1;
-
-        transform: translateX(0);
-
-        transition-delay: calc(var(--item-index) * 0.05s);
-
+      opacity: 1;
+      transform: translateX(0);
+      transition-delay: calc(var(--item-index) * 0.05s);
     }
-
     .rw-resource-card:hover {
-
-        background: var(--rw-white);
-
-        border-left-color: var(--rw-gold);
-
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-
+      background: var(--rw-white);
+      border-left-color: var(--rw-gold);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
-
-
 
     .rw-resource-title {
-
-        font-family: var(--rw-font-heading);
-
-        font-weight: 400;
-
-        font-size: 1.15rem;
-
-        color: var(--rw-dark-slate);
-
-        margin: 0 0 6px 0;
-
+      font-family: var(--rw-font-heading);
+      font-weight: 400;
+      font-size: 1.15rem;
+      color: var(--rw-dark-slate);
+      margin: 0 0 6px 0;
     }
-
-
 
     .rw-resource-desc {
-
-        font-family: var(--rw-font-body);
-
-        font-size: 0.95rem;
-
-        line-height: 1.6;
-
-        color: var(--rw-slate);
-
-        margin-bottom: 12px;
-
+      font-family: var(--rw-font-body);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--rw-slate);
+      margin-bottom: 12px;
     }
-
-
 
     .rw-resource-link {
-
-        display: inline-flex;
-
-        align-items: center;
-
-        gap: 6px;
-
-        font-size: 0.85rem;
-
-        color: var(--rw-dark-slate);
-
-        text-decoration: none;
-
-        font-weight: 600;
-
-        padding: 6px 14px;
-
-        background: rgba(233, 184, 114, 0.15);
-
-        border-radius: 20px;
-
-        transition: all 0.2s;
-
-        letter-spacing: 0.03em;
-
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--rw-dark-slate);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(233, 184, 114, 0.15);
+      border-radius: 20px;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
     }
-
-
 
     .rw-resource-link:focus-visible {
-
-        box-shadow: var(--rw-focus-ring);
-
-        outline: none;
-
+      box-shadow: var(--rw-focus-ring);
+      outline: none;
     }
-
-
 
     .rw-resource-link:hover {
-
-        background: var(--rw-gold);
-
-        color: var(--rw-white);
-
+      background: var(--rw-gold);
+      color: var(--rw-white);
     }
-
-
 
     @media (max-width: 600px) {
-
-        .rw-nav-container {
-
-            flex-direction: column;
-
-            width: 100%;
-
-            border-radius: 20px;
-
-            gap: 0.5rem;
-
-        }
-
-        .rw-nav-btn {
-
-            width: 100%;
-
-            text-align: center;
-
-        }
-
+      .rw-nav-container {
+        flex-direction: column;
+        width: 100%;
+        border-radius: 20px;
+        gap: 0.5rem;
+      }
+      .rw-nav-btn {
+        width: 100%;
+        text-align: center;
+      }
     }
-
-</style>
-
+  </style>
 </head>
-
 <body>
-
-
-
-<div id="resource-widget-root">
-
+  <div id="resource-widget-root">
     <h2 class="rw-widget-title">Curated Resources for Your Journey</h2>
-
-
-
     <nav class="rw-nav-container" role="tablist" aria-label="City Resource Selection">
-
-        <button id="tab-Portland" class="rw-nav-btn" type="button" role="tab" 
-
-                aria-selected="false" aria-controls="view-Portland" tabindex="0">
-
-            Portland
-
-        </button>
-
-        <button id="tab-Seattle" class="rw-nav-btn" type="button" role="tab" 
-
-                aria-selected="false" aria-controls="view-Seattle" tabindex="-1">
-
-            Seattle
-
-        </button>
-
-        <button id="tab-Spokane" class="rw-nav-btn" type="button" role="tab" 
-
-                aria-selected="false" aria-controls="view-Spokane" tabindex="-1">
-
-            Spokane
-
-        </button>
-
+      <button id="tab-Portland" class="rw-nav-btn" type="button" role="tab" aria-selected="false" aria-controls="view-Portland" tabindex="0">Portland</button>
+      <button id="tab-Seattle" class="rw-nav-btn" type="button" role="tab" aria-selected="false" aria-controls="view-Seattle" tabindex="-1">Seattle</button>
+      <button id="tab-Spokane" class="rw-nav-btn" type="button" role="tab" aria-selected="false" aria-controls="view-Spokane" tabindex="-1">Spokane</button>
     </nav>
-
-
-
     <div class="rw-content-area">
-
-        <div id="view-Portland" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Portland"></div>
-
-        <div id="view-Seattle" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Seattle"></div>
-
-        <div id="view-Spokane" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Spokane"></div>
-
+      <div id="view-Portland" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Portland"></div>
+      <div id="view-Seattle" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Seattle"></div>
+      <div id="view-Spokane" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Spokane"></div>
     </div>
+  </div>
 
+  <script>
+    (function() {
+      // --- Data Configuration ---
+      const resourceData = {
+        Portland: [
+          {
+            header: "Housing",
+            items: [
+              { title: "Oregon Housing and Community Services", description: "The Oregon Housing and Community Services website provides resources for Oregonians to reduce poverty and increase access to stable housing.", link: "https://www.oregon.gov/ohcs/pages/index.aspx", linkText: "oregon.gov" },
+              { title: "Oregon Blue Book's Housing and Community Services Department page", description: "The Oregon Blue Book's Housing and Community Services Department page provides information on the department's duties and contact information.", link: "https://sos.oregon.gov/blue-book/Pages/state/executive/housing.aspx", linkText: "sos.oregon.gov" },
+              { title: "Housing Oregon", description: "Housing Oregon is a statewide association of organizations building, financing, and supporting affordable housing, advocating for programs and policies to expand affordable housing.", link: "https://housingoregon.org/", linkText: "housingoregon.org" }
+            ]
+          },
+          {
+            header: "Food",
+            items: [
+              { title: "Oregon Food Bank's Food Finder", description: "The Oregon Food Bank's Food Finder helps users find free groceries, meals, or fresh produce near their location.", link: "https://foodfinder.oregonfoodbank.org/?q=97229", linkText: "foodfinder.oregonfoodbank.org" },
+              { title: "Urban Gleaners", description: "Urban Gleaners offers fresh food to those in need, partnering with local providers and schools to reduce food waste and hunger in Multnomah and Washington County.", link: "https://urbangleaners.org/need-food/", linkText: "urbangleaners.org" },
+              { title: "Multnomah County's Get Food Guide", description: "Multnomah County's Get Food Guide provides information on how to access food assistance programs such as SNAP and WIC.", link: "https://www.multco.us/food-assistance/get-food-guide", linkText: "multco.us" }
+            ]
+          },
+          {
+            header: "LGBTQ+",
+            items: [
+              { title: "Q Center", description: "The Q Center is a community center in Portland that provides a safe space for sexual and gender minority youth ages 13-23 to participate in positive activities and receive services such as case management, resource referral, counseling, and education.", link: "https://www.lgbtqcenters.org/LGBTCenters/Center/6748/Q-Center", linkText: "lgbtqcenters.org" },
+              { title: "Oregon LGBTQ Resources", description: "Oregon LGBTQ Resources is a resource page developed by the Oregon Family Support Network and the Family Acceptance Project to increase family support for LGBTQ children, youth, and young adults.", link: "https://oregonlgbtqresources.org/", linkText: "oregonlgbtqresources.org" },
+              { title: "The Trevor Project", description: "The Trevor Project is the leading suicide prevention and crisis intervention nonprofit organization for LGBTQ+ young people.", link: "https://www.thetrevorproject.org/", linkText: "thetrevorproject.org" },
+              { title: "Q Christian", description: "Q Christian Fellowship is cultivating radical belonging for LGBTQ+ Christians and allies.", link: "https://www.qchristian.org/about", linkText: "qchristian.org" }
+            ]
+          },
+          {
+            header: "Domestic Violence",
+            items: [
+              { title: "YWCA of Greater Portland's Survivor Services program", description: "The YWCA of Greater Portland's Survivor Services program offers support to survivors of domestic violence to increase their safety, economic security, and housing stability.", link: "https://www.ywcapdx.org/what-we-do/survivor-services/", linkText: "ywcapdx.org" },
+              { title: "Multnomah County's Domestic and Sexual Violence Resource Page", description: "Multnomah County's Domestic and Sexual Violence Resource Page provides a list of resources for domestic violence and sexual assault in and around the county.", link: "https://www.multco.us/dv/domestic-and-sexual-violence-resource-page", linkText: "multco.us" },
+              { title: "Oregon Judicial Department's Domestic Violence page", description: "The Oregon Judicial Department's Domestic Violence page provides information on Family Abuse Prevention Act (FAPA) restraining orders.", link: "https://www.courts.oregon.gov/programs/family/domestic-violence/pages/default.aspx", linkText: "courts.oregon.gov" },
+              { title: "Portland Police Bureau's Domestic Violence Reduction Unit", description: "The Portland Police Bureau's Domestic Violence Reduction Unit investigates domestic violence cases and provides victim assistance.", link: "https://www.portlandoregon.gov/police/article/60676", linkText: "portlandoregon.gov" },
+              { title: "Oregon Department of Justice's Domestic Violence page", description: "The Oregon Department of Justice's Domestic Violence page provides information on domestic violence programs near you.", link: "https://www.doj.state.or.us/crime-victims/resources/domestic-violence/", linkText: "doj.state.or.us" },
+              { title: "Oregon Coalition Against Domestic & Sexual Violence", description: "The Oregon Coalition Against Domestic & Sexual Violence is a statewide coalition of programs that provide services to survivors of domestic violence and sexual assault.", link: "https://www.ocadsv.org/find-help/", linkText: "ocadsv.org" },
+              { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of domestic violence.", link: "https://lcsnw.org/", linkText: "lcsnw.org" }
+            ]
+          },
+          {
+            header: "Child Abuse",
+            items: [
+              { title: "National Center for Missing & Exploited Children", description: "The National Center for Missing & Exploited Children's Child Sexual Abuse Material Resources page provides information on how to report child sexual abuse material.", link: "https://www.missingkids.org/gethelpnow/csam-resources", linkText: "missingkids.org" },
+              { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of child abuse.", link: "https://lcsnw.org/office/location/oregon/", linkText: "lcsnw.org" },
+              { title: "CARES Northwest", description: "CARES Northwest is a collaborative, community-based medical program for the assessment, treatment, and prevention of child abuse.", link: "http://www.childabuseintervention.org/", linkText: "childabuseintervention.org" },
+              { title: "National Children's Alliance's Find a CAC page", description: "The National Children's Alliance's Find a CAC page helps users locate a Children's Advocacy Center near them.", link: "https://www.nationalcac.org/find-a-cac/", linkText: "nationalcac.org" },
+              { title: "Helping Survivors", description: "Understand the signs, prevention strategies, and how to seek help if you or a loved one was a victim of child sexual abuse.", link: "https://helpingsurvivors.org/child-sexual-abuse/", linkText: "helpingsurvivors.org" }
+            ]
+          },
+          {
+            header: "Sexual Assault",
+            items: [
+              { title: "RAINN (Rape, Abuse & Incest National Network)", description: "RAINN is the nation's largest anti-sexual violence organization providing resources for survivors of sexual assault.", link: "https://www.rainn.org/resources", linkText: "rainn.org" },
+              { title: "Multnomah County's Domestic and Sexual Violence Resource Page", description: "Multnomah County's Domestic and Sexual Violence Resource Page provides a list of resources for domestic violence and sexual assault in and around the county.", link: "https://www.multco.us/dv/domestic-and-sexual-violence-resource-page", linkText: "multco.us" },
+              { title: "Oregon Coalition Against Domestic & Sexual Violence", description: "The Oregon Coalition Against Domestic & Sexual Violence is a statewide coalition of programs that provide services to survivors of domestic violence and sexual assault.", link: "https://www.ocadsv.org/find-help/", linkText: "ocadsv.org" },
+              { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of sexual assault.", link: "https://lcsnw.org/", linkText: "lcsnw.org" },
+              { title: "Bergman Legal - Sexual Abuse", description: "Bergman Legal provides legal services and support for survivors of sexual abuse.", link: "https://www.bergmanlegal.com/sexual-abuse/", linkText: "bergmanlegal.com" }
+            ]
+          }
+        ],
+        Seattle: [
+          {
+            header: "Housing",
+            items: [
+              { title: "HUD.gov Renting", description: "HUD.gov's Renting page for Washington State provides information on subsidized apartments in Washington State.", link: "https://www.hud.gov/states/washington/renting", linkText: "hud.gov" },
+              { title: "Pioneer Human Services' Aspen Terrace page", description: "Pioneer Human Services' Aspen Terrace page provides information on their Aspen Terrace apartment complex that offers affordable housing to individuals reentering society from prison or jail or those overcoming chemical dependency.", link: "https://pioneerhumanservices.org/housing/aspen-terrace", linkText: "pioneerhumanservices.org" },
+              { title: "St. Vincent de Paul Seattle's Get Help page", description: "St. Vincent de Paul Seattle's Get Help page provides information on their services including eviction prevention and move-in assistance.", link: "https://svdpseattle.org/get-help/", linkText: "svdpseattle.org" },
+              { title: "Compass Housing Alliance", description: "Compass Housing Alliance offers affordable housing options in the greater Seattle area.", link: "https://www.compasshousingalliance.org/affordable-housing/", linkText: "compasshousingalliance.org" },
+              { title: "Seattle Housing Authority", description: "Offers affordable housing options such as public housing or Section 8 vouchers.", link: "https://www.seattlehousing.org/", linkText: "seattlehousing.org" },
+              { title: "The City of Seattle's Rental Assistance page", description: "The City of Seattle's Rental Assistance page provides information on rental assistance programs for low-income households in Seattle.", link: "https://www.seattle.gov/housing/programs-and-initiatives/rental-assistance", linkText: "seattle.gov" },
+              { title: "King County Housing Authority's Seattle page", description: "King County Housing Authority's Seattle page provides information on affordable housing options in Seattle.", link: "https://www.kcha.org/housing/city.aspx?city=seattle", linkText: "kcha.org" },
+              { title: "HUD.gov's Moving to Work (MTW)", description: "HUD.gov's Moving to Work (MTW) page for the Seattle Housing Authority provides information on the MTW program that allows public housing authorities to design and test innovative strategies for addressing the housing needs of low-income families.", link: "https://www.hud.gov/program_offices/public_indian_housing/programs/ph/mtw/seattle", linkText: "hud.gov" }
+            ]
+          },
+          {
+            header: "Food",
+            items: [
+              { title: "St. Vincent de Paul Food Bank", description: "Information on their Georgetown Food Bank and home delivery program for homebound seniors and disabled persons.", link: "https://svdpseattle.org/get-help/food-bank/", linkText: "svdpseattle.org" },
+              { title: "Seattle Food Committee", description: "Find a Food Bank page helps users locate a food bank near them in Seattle.", link: "https://www.seattlefoodcommittee.org/find-a-food-bank/", linkText: "seattlefoodcommittee.org" },
+              { title: "University District Food Bank", description: "University District Food Bank offers food assistance to residents of the University District, Wallingford, Eastlake, South Lake Union, Fremont, Ravenna, Laurelhurst, Sand Point, and Bryant neighborhoods.", link: "https://www.udistrictfoodbank.org/", linkText: "udistrictfoodbank.org" },
+              { title: "Pike Market Senior Center & Food Bank", description: "Pike Market Senior Center & Food Bank offers a food bank, meals, and other services to seniors and the homeless in downtown Seattle.", link: "https://www.pmsc-fb.org/food-bank", linkText: "pmsc-fb.org" },
+              { title: "Ballard Food Bank", description: "Ballard Food Bank offers food assistance to residents of Ballard, Magnolia, and Queen Anne.", link: "https://www.ballardfoodbank.org/", linkText: "ballardfoodbank.org" }
+            ]
+          },
+          {
+            header: "LGBTQ+",
+            items: [
+              { title: "The Trevor Project", description: "The Trevor Project is the leading suicide prevention and crisis intervention nonprofit organization for LGBTQ+ young people.", link: "https://www.thetrevorproject.org/", linkText: "thetrevorproject.org" },
+              { title: "Q Christian", description: "Q Christian Fellowship is cultivating radical belonging for LGBTQ+ Christians and allies.", link: "https://www.qchristian.org/about", linkText: "qchristian.org" }
+            ]
+          },
+          {
+            header: "Domestic Violence",
+            items: [
+              { title: "Washington State Coalition Against Domestic Violence", description: "Washington State Coalition Against Domestic Violence provides a list of domestic violence programs in Washington State.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" },
+              { title: "LifeWire", description: "Organization based in Bellevue offering emergency shelter, legal advocacy, mental health therapy, and more.", link: "https://www.lifewire.org/", linkText: "lifewire.org" }
+            ]
+          },
+          {
+            header: "Child Abuse",
+            items: [
+              { title: "Washington State Department of Children Youth & Families", description: "Provides information on how to report child abuse or neglect in Washington State.", link: "https://www.dcyf.wa.gov/safety/report-abuse", linkText: "dcyf.wa.gov" },
+              { title: "The National Center for Missing & Exploited Children", description: "Provides information on how to report child sexual abuse material.", link: "https://www.missingkids.org/gethelpnow/csam-resources", linkText: "missingkids.org" },
+              { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of child abuse in Washington State.", link: "https://lcsnw.org/", linkText: "lcsnw.org" },
+              { title: "Children's Advocacy Centers of Washington", description: "The state chapter of the National Children's Alliance providing support to local Children's Advocacy Centers (CACs) throughout Washington State.", link: "https://cacwa.org/reporting-child-abuse/", linkText: "cacwa.org" },
+              { title: "The National Children's Alliance's Find a CAC page", description: "Helps users locate a Children's Advocacy Center near them.", link: "https://www.nationalcac.org/find-a-cac/", linkText: "nationalcac.org" },
+              { title: "Helping Survivors", description: "Understand the signs, prevention strategies, and how to seek help if you or a loved one was a victim of child sexual abuse.", link: "https://helpingsurvivors.org/child-sexual-abuse/", linkText: "helpingsurvivors.org" }
+            ]
+          },
+          {
+            header: "Sexual Assault",
+            items: [
+              { title: "RAINN (Rape, Abuse & Incest National Network)", description: "RAINN is the nation's largest anti-sexual violence organization providing resources for survivors of sexual assault.", link: "https://www.rainn.org/resources", linkText: "rainn.org" },
+              { title: "Washington State Coalition Against Domestic Violence", description: "Provides a list of domestic violence programs in Washington State including those that serve survivors of sexual assault.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" },
+              { title: "YWCA USA", description: "YWCA USA offers domestic violence services including those for survivors of sexual assault.", link: "https://www.ywca.org/what-we-do/domestic-and-sexual-violence-services/", linkText: "ywca.org" }
+            ]
+          }
+        ],
+        Spokane: [
+          {
+            header: "Housing",
+            items: [
+              { title: "HUD.gov Renting", description: "HUD.gov's Renting page for Washington State provides information on subsidized apartments in Washington State.", link: "https://www.hud.gov/states/washington/renting", linkText: "hud.gov" },
+              { title: "Spokane Housing Authority", description: "Offers affordable housing options such as public housing or Section 8 vouchers.", link: "https://www.spokanehousing.org/", linkText: "spokanehousing.org" },
+              { title: "Spokane County Community Services", description: "Provides information on the Section 8 Housing Choice Voucher program.", link: "https://www.spokanecounty.org/2235/Section-8-Administration", linkText: "spokanecounty.org" },
+              { title: "AffordableHousing.com's Spokane Housing Authority page", description: "Provides information on affordable housing options in Spokane.", link: "https://www.affordablehousing.com/housing-authority-wa/spokane-housing-authority-3842/", linkText: "affordablehousing.com" },
+              { title: "SNAP", description: "SNAP offers rental housing assistance to low-income individuals and families in Spokane County.", link: "https://www.snapwa.org/", linkText: "snapwa.org" },
+              { title: "ARC of Spokane's Housing page", description: "Provides information on affordable housing options for individuals with intellectual and developmental disabilities.", link: "https://www.arc-spokane.org/resources/housing", linkText: "arc-spokane.org" }
+            ]
+          },
+          {
+            header: "Food",
+            items: [
+              { title: "ARC of Spokane's Housing page", description: "Provides information on food assistance programs for individuals with intellectual and developmental disabilities.", link: "https://www.arc-spokane.org/resources/housing", linkText: "arc-spokane.org" },
+              { title: "Spokane Valley Partners", description: "Offers a food bank, clothing bank, and emergency assistance.", link: "https://www.svpart.org/", linkText: "svpart.org" },
+              { title: "Northwest Harvest", description: "Hunger relief agency operating statewide with a network of 375 food banks.", link: "https://www.northwestharvest.org/", linkText: "northwestharvest.org" },
+              { title: "Spokane Resource Center's Food Banks", description: "Provides a list of food banks and meal sites in Spokane.", link: "https://spokaneresourcecenter.org/covid-19/food-banks-meal-sites", linkText: "spokaneresourcecenter.org" },
+              { title: "FoodPantries.org's Spokane page", description: "Provides a list of food pantries in Spokane.", link: "https://www.foodpantries.org/ci/wa-spokane", linkText: "foodpantries.org" }
+            ]
+          },
+          {
+            header: "LGBTQ+",
+            items: [
+              { title: "The Trevor Project", description: "The Trevor Project is the leading suicide prevention and crisis intervention nonprofit organization for LGBTQ+ young people.", link: "https://www.thetrevorproject.org/", linkText: "thetrevorproject.org" },
+              { title: "Q Christian", description: "Q Christian Fellowship is cultivating radical belonging for LGBTQ+ Christians and allies.", link: "https://www.qchristian.org/about", linkText: "qchristian.org" }
+            ]
+          },
+          {
+            header: "Child Abuse",
+            items: [
+              { title: "Washington State Department of Children Youth & Families", description: "Provides information on how to report child abuse or neglect in Washington State.", link: "https://www.dcyf.wa.gov/safety/report-abuse", linkText: "dcyf.wa.gov" },
+              { title: "The National Center for Missing & Exploited Children", description: "Provides information on how to report child sexual abuse material.", link: "https://www.missingkids.org/gethelpnow/csam-resources", linkText: "missingkids.org" },
+              { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of child abuse in Washington State.", link: "https://lcsnw.org/", linkText: "lcsnw.org" },
+              { title: "Children's Advocacy Centers of Washington", description: "The state chapter of the National Children's Alliance providing support to local Children's Advocacy Centers (CACs) throughout Washington State.", link: "https://cacwa.org/reporting-child-abuse/", linkText: "cacwa.org" },
+              { title: "The National Children's Alliance's Find a CAC page", description: "Helps users locate a Children's Advocacy Center near them.", link: "https://www.nationalcac.org/find-a-cac/", linkText: "nationalcac.org" },
+              { title: "Helping Survivors", description: "Understand the signs, prevention strategies, and how to seek help if you or a loved one was a victim of child sexual abuse.", link: "https://helpingsurvivors.org/child-sexual-abuse/", linkText: "helpingsurvivors.org" }
+            ]
+          },
+          {
+            header: "Sexual Assault",
+            items: [
+              { title: "RAINN (Rape, Abuse & Incest National Network)", description: "RAINN is the nation's largest anti-sexual violence organization providing resources for survivors of sexual assault.", link: "https://www.rainn.org/resources", linkText: "rainn.org" },
+              { title: "Washington State Coalition Against Domestic Violence", description: "Provides a list of domestic violence programs in Washington State including those that serve survivors of sexual assault.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" },
+              { title: "YWCA USA", description: "YWCA USA offers domestic violence services including those for survivors of sexual assault.", link: "https://www.ywca.org/what-we-do/domestic-and-sexual-violence-services/", linkText: "ywca.org" }
+            ]
+          },
+          {
+            header: "Domestic Violence",
+            items: [
+              { title: "Washington State Coalition Against Domestic Violence", description: "Washington State Coalition Against Domestic Violence provides a list of domestic violence programs in Washington State.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" },
+              { title: "LifeWire", description: "LifeWire is an organization based in Bellevue that offers services such as emergency shelter, housing assistance, legal advocacy, mental health therapy, support groups, children's programs, etc. to survivors of domestic violence.", link: "https://www.lifewire.org/", linkText: "lifewire.org" },
+              { title: "YWCA USA", description: "YWCA USA offers domestic violence services including emergency shelter, legal advocacy, counseling etc.", link: "https://www.ywca.org/what-we-do/domestic-and-sexual-violence-services/", linkText: "ywca.org" }
+            ]
+          }
+        ]
+      };
 
-
-</div>
-
-
-
-<script>
-
-(function() { 
-
-
-
-   // --- Data Configuration --- const resourceData = { Portland: [ { header: "Housing", items: [ { title: "Oregon Housing and Community Services", description: "The Oregon Housing and Community Services website provides resources for Oregonians to reduce poverty and increase access to stable housing.", link: "https://www.oregon.gov/ohcs/pages/index.aspx", linkText: "oregon.gov" }, { title: "Oregon Blue Book's Housing and Community Services Department page", description: "The Oregon Blue Book's Housing and Community Services Department page provides information on the department's duties and contact information.", link: "https://sos.oregon.gov/blue-book/Pages/state/executive/housing.aspx", linkText: "sos.oregon.gov" }, { title: "Housing Oregon", description: "Housing Oregon is a statewide association of organizations building, financing, and supporting affordable housing, advocating for programs and policies to expand affordable housing.", link: "https://housingoregon.org/", linkText: "housingoregon.org" } ] }, { header: "Food", items: [ { title: "Oregon Food Bank's Food Finder", description: "The Oregon Food Bank's Food Finder helps users find free groceries, meals, or fresh produce near their location.", link: "https://foodfinder.oregonfoodbank.org/?q=97229", linkText: "foodfinder.oregonfoodbank.org" }, { title: "Urban Gleaners", description: "Urban Gleaners offers fresh food to those in need, partnering with local providers and schools to reduce food waste and hunger in Multnomah and Washington County.", link: "https://urbangleaners.org/need-food/", linkText: "urbangleaners.org" }, { title: "Multnomah County's Get Food Guide", description: "Multnomah County's Get Food Guide provides information on how to access food assistance programs such as SNAP and WIC.", link: "https://www.multco.us/food-assistance/get-food-guide", linkText: "multco.us" } ] }, { header: "LGBTQ+", items: [ { title: "Q Center", description: "The Q Center is a community center in Portland that provides a safe space for sexual and gender minority youth ages 13-23 to participate in positive activities and receive services such as case management, resource referral, counseling, and education.", link: "https://www.lgbtqcenters.org/LGBTCenters/Center/6748/Q-Center", linkText: "lgbtqcenters.org" }, { title: "Oregon LGBTQ Resources", description: "Oregon LGBTQ Resources is a resource page developed by the Oregon Family Support Network and the Family Acceptance Project to increase family support for LGBTQ children, youth, and young adults.", link: "https://oregonlgbtqresources.org/", linkText: "oregonlgbtqresources.org" }, { title: "The Trevor Project", description: "The Trevor Project is the leading suicide prevention and crisis intervention nonprofit organization for LGBTQ+ young people.", link: "https://www.thetrevorproject.org/", linkText: "thetrevorproject.org" }, { title: "Q Christian", description: "Q Christian Fellowship is cultivating radical belonging for LGBTQ+ Christians and allies.", link: "https://www.qchristian.org/about", linkText: "qchristian.org" } ] }, { header: "Domestic Violence", items: [ { title: "YWCA of Greater Portland's Survivor Services program", description: "The YWCA of Greater Portland's Survivor Services program offers support to survivors of domestic violence to increase their safety, economic security, and housing stability.", link: "https://www.ywcapdx.org/what-we-do/survivor-services/", linkText: "ywcapdx.org" }, { title: "Multnomah County's Domestic and Sexual Violence Resource Page", description: "Multnomah County's Domestic and Sexual Violence Resource Page provides a list of resources for domestic violence and sexual assault in and around the county.", link: "https://www.multco.us/dv/domestic-and-sexual-violence-resource-page", linkText: "multco.us" }, { title: "Oregon Judicial Department's Domestic Violence page", description: "The Oregon Judicial Department's Domestic Violence page provides information on Family Abuse Prevention Act (FAPA) restraining orders.", link: "https://www.courts.oregon.gov/programs/family/domestic-violence/pages/default.aspx", linkText: "courts.oregon.gov" }, { title: "Portland Police Bureau's Domestic Violence Reduction Unit", description: "The Portland Police Bureau's Domestic Violence Reduction Unit investigates domestic violence cases and provides victim assistance.", link: "https://www.portlandoregon.gov/police/article/60676", linkText: "portlandoregon.gov" }, { title: "Oregon Department of Justice's Domestic Violence page", description: "The Oregon Department of Justice's Domestic Violence page provides information on domestic violence programs near you.", link: "https://www.doj.state.or.us/crime-victims/resources/domestic-violence/", linkText: "doj.state.or.us" }, { title: "Oregon Coalition Against Domestic & Sexual Violence", description: "The Oregon Coalition Against Domestic & Sexual Violence is a statewide coalition of programs that provide services to survivors of domestic violence and sexual assault.", link: "https://www.ocadsv.org/find-help/", linkText: "ocadsv.org" }, { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of domestic violence.", link: "https://lcsnw.org/", linkText: "lcsnw.org" } ] }, { header: "Child Abuse", items: [ { title: "National Center for Missing & Exploited Children", description: "The National Center for Missing & Exploited Children's Child Sexual Abuse Material Resources page provides information on how to report child sexual abuse material.", link: "https://www.missingkids.org/gethelpnow/csam-resources", linkText: "missingkids.org" }, { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of child abuse.", link: "https://lcsnw.org/office/location/oregon/", linkText: "lcsnw.org" }, { title: "CARES Northwest", description: "CARES Northwest is a collaborative, community-based medical program for the assessment, treatment, and prevention of child abuse.", link: "http://www.childabuseintervention.org/", linkText: "childabuseintervention.org" }, { title: "National Children's Alliance's Find a CAC page", description: "The National Children's Alliance's Find a CAC page helps users locate a Children's Advocacy Center near them.", link: "https://www.nationalcac.org/find-a-cac/", linkText: "nationalcac.org" }, { title: "Helping Survivors", description: "Understand the signs, prevention strategies, and how to seek help if you or a loved one was a victim of child sexual abuse.", link: "https://helpingsurvivors.org/child-sexual-abuse/", linkText: "helpingsurvivors.org" } ] }, { header: "Sexual Assault", items: [ { title: "RAINN (Rape, Abuse & Incest National Network)", description: "RAINN is the nation's largest anti-sexual violence organization providing resources for survivors of sexual assault.", link: "https://www.rainn.org/resources", linkText: "rainn.org" }, { title: "Multnomah County's Domestic and Sexual Violence Resource Page", description: "Multnomah County's Domestic and Sexual Violence Resource Page provides a list of resources for domestic violence and sexual assault in and around the county.", link: "https://www.multco.us/dv/domestic-and-sexual-violence-resource-page", linkText: "multco.us" }, { title: "Oregon Coalition Against Domestic & Sexual Violence", description: "The Oregon Coalition Against Domestic & Sexual Violence is a statewide coalition of programs that provide services to survivors of domestic violence and sexual assault.", link: "https://www.ocadsv.org/find-help/", linkText: "ocadsv.org" }, { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of sexual assault.", link: "https://lcsnw.org/", linkText: "lcsnw.org" }, { title: "Bergman Legal - Sexual Abuse", description: "Bergman Legal provides legal services and support for survivors of sexual abuse.", link: "https://www.bergmanlegal.com/sexual-abuse/", linkText: "bergmanlegal.com" } ] } ], Seattle: [ { header: "Housing", items: [ { title: "HUD.gov Renting", description: "HUD.gov's Renting page for Washington State provides information on subsidized apartments in Washington State.", link: "https://www.hud.gov/states/washington/renting", linkText: "hud.gov" }, { title: "Pioneer Human Services’ Aspen Terrace page", description: "Pioneer Human Services’ Aspen Terrace page provides information on their Aspen Terrace apartment complex that offers affordable housing to individuals reentering society from prison or jail or those overcoming chemical dependency.", link: "https://pioneerhumanservices.org/housing/aspen-terrace", linkText: "pioneerhumanservices.org" }, { title: "St. Vincent de Paul Seattle’s Get Help page", description: "St. Vincent de Paul Seattle’s Get Help page provides information on their services including eviction prevention and move-in assistance.", link: "https://svdpseattle.org/get-help/", linkText: "svdpseattle.org" }, { title: "Compass Housing Alliance", description: "Compass Housing Alliance offers affordable housing options in the greater Seattle area.", link: "https://www.compasshousingalliance.org/affordable-housing/", linkText: "compasshousingalliance.org" }, { title: "Seattle Housing Authority", description: "Offers affordable housing options such as public housing or Section 8 vouchers.", link: "https://www.seattlehousing.org/", linkText: "seattlehousing.org" }, { title: "The City of Seattle’s Rental Assistance page", description: "The City of Seattle’s Rental Assistance page provides information on rental assistance programs for low-income households in Seattle.", link: "https://www.seattle.gov/housing/programs-and-initiatives/rental-assistance", linkText: "seattle.gov" }, { title: "King County Housing Authority’s Seattle page", description: "King County Housing Authority’s Seattle page provides information on affordable housing options in Seattle.", link: "https://www.kcha.org/housing/city.aspx?city=seattle", linkText: "kcha.org" }, { title: "HUD.gov’s Moving to Work (MTW)", description: "HUD.gov’s Moving to Work (MTW) page for the Seattle Housing Authority provides information on the MTW program that allows public housing authorities to design and test innovative strategies for addressing the housing needs of low-income families.", link: "https://www.hud.gov/program_offices/public_indian_housing/programs/ph/mtw/seattle", linkText: "hud.gov" } ] }, { header: "Food", items: [ { title: "St. Vincent de Paul Food Bank", description: "Information on their Georgetown Food Bank and home delivery program for homebound seniors and disabled persons.", link: "https://svdpseattle.org/get-help/food-bank/", linkText: "svdpseattle.org" }, { title: "Seattle Food Committee", description: "Find a Food Bank page helps users locate a food bank near them in Seattle.", link: "https://www.seattlefoodcommittee.org/find-a-food-bank/", linkText: "seattlefoodcommittee.org" }, { title: "University District Food Bank", description: "University District Food Bank offers food assistance to residents of the University District, Wallingford, Eastlake, South Lake Union, Fremont, Ravenna, Laurelhurst, Sand Point, and Bryant neighborhoods.", link: "https://www.udistrictfoodbank.org/", linkText: "udistrictfoodbank.org" }, { title: "Pike Market Senior Center & Food Bank", description: "Pike Market Senior Center & Food Bank offers a food bank, meals, and other services to seniors and the homeless in downtown Seattle.", link: "https://www.pmsc-fb.org/food-bank", linkText: "pmsc-fb.org" }, { title: "Ballard Food Bank", description: "Ballard Food Bank offers food assistance to residents of Ballard, Magnolia, and Queen Anne.", link: "https://www.ballardfoodbank.org/", linkText: "ballardfoodbank.org" } ] }, { header: "LGBTQ+", items: [ { title: "The Trevor Project", description: "The Trevor Project is the leading suicide prevention and crisis intervention nonprofit organization for LGBTQ+ young people.", link: "https://www.thetrevorproject.org/", linkText: "thetrevorproject.org" }, { title: "Q Christian", description: "Q Christian Fellowship is cultivating radical belonging for LGBTQ+ Christians and allies.", link: "https://www.qchristian.org/about", linkText: "qchristian.org" } ] }, { header: "Domestic Violence", items: [ { title: "Washington State Coalition Against Domestic Violence", description: "Washington State Coalition Against Domestic Violence provides a list of domestic violence programs in Washington State.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" }, { title: "LifeWire", description: "Organization based in Bellevue offering emergency shelter, legal advocacy, mental health therapy, and more.", link: "https://www.lifewire.org/", linkText: "lifewire.org" } ] }, { header: "Child Abuse", items: [ { title: "Washington State Department of Children Youth & Families", description: "Provides information on how to report child abuse or neglect in Washington State.", link: "https://www.dcyf.wa.gov/safety/report-abuse", linkText: "dcyf.wa.gov" }, { title: "The National Center for Missing & Exploited Children", description: "Provides information on how to report child sexual abuse material.", link: "https://www.missingkids.org/gethelpnow/csam-resources", linkText: "missingkids.org" }, { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of child abuse in Washington State.", link: "https://lcsnw.org/", linkText: "lcsnw.org" }, { title: "Children’s Advocacy Centers of Washington", description: "The state chapter of the National Children’s Alliance providing support to local Children’s Advocacy Centers (CACs) throughout Washington State.", link: "https://cacwa.org/reporting-child-abuse/", linkText: "cacwa.org" }, { title: "The National Children's Alliance's Find a CAC page", description: "Helps users locate a Children's Advocacy Center near them.", link: "https://www.nationalcac.org/find-a-cac/", linkText: "nationalcac.org" }, { title: "Helping Survivors", description: "Understand the signs, prevention strategies, and how to seek help if you or a loved one was a victim of child sexual abuse.", link: "https://helpingsurvivors.org/child-sexual-abuse/", linkText: "helpingsurvivors.org" } ] }, { header: "Sexual Assault", items: [ { title: "RAINN (Rape, Abuse & Incest National Network)", description: "RAINN is the nation's largest anti-sexual violence organization providing resources for survivors of sexual assault.", link: "https://www.rainn.org/resources", linkText: "rainn.org" }, { title: "Washington State Coalition Against Domestic Violence", description: "Provides a list of domestic violence programs in Washington State including those that serve survivors of sexual assault.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" }, { title: "YWCA USA", description: "YWCA USA offers domestic violence services including those for survivors of sexual assault.", link: "https://www.ywca.org/what-we-do/domestic-and-sexual-violence-services/", linkText: "ywca.org" } ] } ], Spokane: [ { header: "Housing", items: [ { title: "HUD.gov Renting", description: "HUD.gov's Renting page for Washington State provides information on subsidized apartments in Washington State.", link: "https://www.hud.gov/states/washington/renting", linkText: "hud.gov" }, { title: "Spokane Housing Authority", description: "Offers affordable housing options such as public housing or Section 8 vouchers.", link: "https://www.spokanehousing.org/", linkText: "spokanehousing.org" }, { title: "Spokane County Community Services", description: "Provides information on the Section 8 Housing Choice Voucher program.", link: "https://www.spokanecounty.org/2235/Section-8-Administration", linkText: "spokanecounty.org" }, { title: "AffordableHousing.com's Spokane Housing Authority page", description: "Provides information on affordable housing options in Spokane.", link: "https://www.affordablehousing.com/housing-authority-wa/spokane-housing-authority-3842/", linkText: "affordablehousing.com" }, { title: "SNAP", description: "SNAP offers rental housing assistance to low-income individuals and families in Spokane County.", link: "https://www.snapwa.org/", linkText: "snapwa.org" }, { title: "ARC of Spokane's Housing page", description: "Provides information on affordable housing options for individuals with intellectual and developmental disabilities.", link: "https://www.arc-spokane.org/resources/housing", linkText: "arc-spokane.org" } ] }, { header: "Food", items: [ { title: "ARC of Spokane's Housing page", description: "Provides information on food assistance programs for individuals with intellectual and developmental disabilities.", link: "https://www.arc-spokane.org/resources/housing", linkText: "arc-spokane.org" }, { title: "Spokane Valley Partners", description: "Offers a food bank, clothing bank, and emergency assistance.", link: "https://www.svpart.org/", linkText: "svpart.org" }, { title: "Northwest Harvest", description: "Hunger relief agency operating statewide with a network of 375 food banks.", link: "https://www.northwestharvest.org/", linkText: "northwestharvest.org" }, { title: "Spokane Resource Center's Food Banks", description: "Provides a list of food banks and meal sites in Spokane.", link: "https://spokaneresourcecenter.org/covid-19/food-banks-meal-sites", linkText: "spokaneresourcecenter.org" }, { title: "FoodPantries.org's Spokane page", description: "Provides a list of food pantries in Spokane.", link: "https://www.foodpantries.org/ci/wa-spokane", linkText: "foodpantries.org" } ] }, { header: "LGBTQ+", items: [ { title: "The Trevor Project", description: "The Trevor Project is the leading suicide prevention and crisis intervention nonprofit organization for LGBTQ+ young people.", link: "https://www.thetrevorproject.org/", linkText: "thetrevorproject.org" }, { title: "Q Christian", description: "Q Christian Fellowship is cultivating radical belonging for LGBTQ+ Christians and allies.", link: "https://www.qchristian.org/about", linkText: "qchristian.org" } ] }, { header: "Child Abuse", items: [ { title: "Washington State Department of Children Youth & Families", description: "Provides information on how to report child abuse or neglect in Washington State.", link: "https://www.dcyf.wa.gov/safety/report-abuse", linkText: "dcyf.wa.gov" }, { title: "The National Center for Missing & Exploited Children", description: "Provides information on how to report child sexual abuse material.", link: "https://www.missingkids.org/gethelpnow/csam-resources", linkText: "missingkids.org" }, { title: "Lutheran Community Services Northwest", description: "Lutheran Community Services Northwest provides counseling, support groups, advocacy, and other services to survivors of child abuse in Washington State.", link: "https://lcsnw.org/", linkText: "lcsnw.org" }, { title: "Children’s Advocacy Centers of Washington", description: "The state chapter of the National Children’s Alliance providing support to local Children’s Advocacy Centers (CACs) throughout Washington State.", link: "https://cacwa.org/reporting-child-abuse/", linkText: "cacwa.org" }, { title: "The National Children's Alliance's Find a CAC page", description: "Helps users locate a Children's Advocacy Center near them.", link: "https://www.nationalcac.org/find-a-cac/", linkText: "nationalcac.org" }, { title: "Helping Survivors", description: "Understand the signs, prevention strategies, and how to seek help if you or a loved one was a victim of child sexual abuse.", link: "https://helpingsurvivors.org/child-sexual-abuse/", linkText: "helpingsurvivors.org" } ] }, { header: "Sexual Assault", items: [ { title: "RAINN (Rape, Abuse & Incest National Network)", description: "RAINN is the nation's largest anti-sexual violence organization providing resources for survivors of sexual assault.", link: "https://www.rainn.org/resources", linkText: "rainn.org" }, { title: "Washington State Coalition Against Domestic Violence", description: "Provides a list of domestic violence programs in Washington State including those that serve survivors of sexual assault.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" }, { title: "YWCA USA", description: "YWCA USA offers domestic violence services including those for survivors of sexual assault.", link: "https://www.ywca.org/what-we-do/domestic-and-sexual-violence-services/", linkText: "ywca.org" } ] }, { header: "Domestic Violence", items: [ { title: "Washington State Coalition Against Domestic Violence", description: "Washington State Coalition Against Domestic Violence provides a list of domestic violence programs in Washington State.", link: "https://wscadv.org/washington-domestic-violence-programs/#seattle-area", linkText: "wscadv.org" }, { title: "LifeWire", description: "LifeWire is an organization based in Bellevue that offers services such as emergency shelter, housing assistance, legal advocacy, mental health therapy, support groups, children’s programs, etc. to survivors of domestic violence.", link: "https://www.lifewire.org/", linkText: "lifewire.org" }, { title: "YWCA USA", description: "YWCA USA offers domestic violence services including emergency shelter, legal advocacy, counseling etc.", link: "https://www.ywca.org/what-we-do/domestic-and-sexual-violence-services/", linkText: "ywca.org" } ] } ] };
-
-
-
-    // --- Logic ---
-
-
-
-    // 1. Render content (DOM Construction)
-
-    function renderCity(cityName) {
-
+      // --- Logic ---
+      // 1. Render content (DOM Construction)
+      function renderCity(cityName) {
         const container = document.getElementById(`view-${cityName}`);
-
         const data = resourceData[cityName];
-
-
-
-        if (!data) return; 
-
-
+        if (!data) return;
 
         data.forEach((group, index) => {
+          const node = document.createElement('div');
+          node.className = 'rw-group-node';
+          node.style.setProperty('--delay', `${index * 0.1}s`);
 
-            // Container
+          const header = document.createElement('button');
+          header.className = 'rw-group-header';
+          header.type = 'button';
+          header.setAttribute('aria-expanded', 'false');
+          header.innerHTML = `
+            <span class="rw-group-title">${group.header}</span>
+            <span class="material-symbols-rounded rw-icon-rotator">chevron_right</span>
+          `;
 
-            const node = document.createElement('div');
+          const content = document.createElement('div');
+          content.className = 'rw-group-content';
+          const contentInner = document.createElement('div');
+          contentInner.className = 'rw-group-content-inner';
 
-            node.className = 'rw-group-node';
-
-            node.style.setProperty('--delay', `${index * 0.1}s`);
-
-
-
-            // Accessible Button Header
-
-            const header = document.createElement('button');
-
-            header.className = 'rw-group-header';
-
-            header.type = 'button';
-
-            header.setAttribute('aria-expanded', 'false');
-
-            header.innerHTML = `
-
-                <span class="rw-group-title">${group.header}</span>
-
-                <span class="material-symbols-rounded rw-icon-rotator">chevron_right</span>
-
+          group.items.forEach((item, i) => {
+            const card = document.createElement('div');
+            card.className = 'rw-resource-card';
+            card.style.setProperty('--item-index', i);
+            card.innerHTML = `
+              <h3 class="rw-resource-title">${item.title}</h3>
+              <div class="rw-resource-desc">${item.description}</div>
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="rw-resource-link">
+                ${item.linkText || 'Visit Website'}
+                <span class="material-symbols-rounded" style="font-size:14px">open_in_new</span>
+              </a>
             `;
+            contentInner.appendChild(card);
+          });
 
+          content.appendChild(contentInner);
 
+          header.addEventListener('click', () => {
+            const isCurrentlyOpen = header.getAttribute('aria-expanded') === 'true';
+            const allHeaders = container.querySelectorAll('.rw-group-header');
+            const allContents = container.querySelectorAll('.rw-group-content');
+            allHeaders.forEach(h => h.setAttribute('aria-expanded', 'false'));
+            allContents.forEach(c => c.style.gridTemplateRows = '0fr');
+            if (!isCurrentlyOpen) {
+              header.setAttribute('aria-expanded', 'true');
+              content.style.gridTemplateRows = '1fr';
+            }
+          });
 
-            // Content Wrapper
-
-            const content = document.createElement('div');
-
-            content.className = 'rw-group-content';
-
-            const contentInner = document.createElement('div');
-
-            contentInner.className = 'rw-group-content-inner';
-
-
-
-            // List Items
-
-            group.items.forEach((item, i) => {
-
-                const card = document.createElement('div');
-
-                card.className = 'rw-resource-card';
-
-                card.style.setProperty('--item-index', i);
-
-                card.innerHTML = `
-
-                    <h3 class="rw-resource-title">${item.title}</h3>
-
-                    <div class="rw-resource-desc">${item.description}</div>
-
-                    <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="rw-resource-link">
-
-                        ${item.linkText || 'Visit Website'}
-
-                        <span class="material-symbols-rounded" style="font-size:14px">open_in_new</span>
-
-                    </a>
-
-                `;
-
-                contentInner.appendChild(card);
-
-            });
-
-
-
-            content.appendChild(contentInner);
-
-
-
-            // FIX 2: Modified Event Listener for "One at a Time" Accordion
-
-            header.addEventListener('click', () => {
-
-                const isCurrentlyOpen = header.getAttribute('aria-expanded') === 'true';
-
-
-
-                // Step A: Close ALL other items in this specific city view
-
-                const allHeaders = container.querySelectorAll('.rw-group-header');
-
-                const allContents = container.querySelectorAll('.rw-group-content');
-
-                // Reset all
-
-                allHeaders.forEach(h => {
-
-                    h.setAttribute('aria-expanded', 'false');
-
-                    // Find the icon and rotate it back if you were doing manual style manipulation (but CSS handles it via aria-expanded)
-
-                });
-
-                allContents.forEach(c => {
-
-                    c.style.gridTemplateRows = '0fr';
-
-                });
-
-
-
-                // Step B: Toggle the clicked one
-
-                // If it was closed, we open it. If it was open, we leave it closed (from Step A).
-
-                if (!isCurrentlyOpen) {
-
-                    header.setAttribute('aria-expanded', 'true');
-
-                    content.style.gridTemplateRows = '1fr';
-
-                }
-
-            });
-
-
-
-            node.appendChild(header);
-
-            node.appendChild(content);
-
-            container.appendChild(node);
-
+          node.appendChild(header);
+          node.appendChild(content);
+          container.appendChild(node);
         });
+      }
 
-    }
-
-
-
-    // 2. Tab Switching Logic
-
-    function activateTab(tabId) {
-
+      // 2. Tab Switching Logic
+      function activateTab(tabId) {
         const buttons = document.querySelectorAll('.rw-nav-btn');
-
         const panels = document.querySelectorAll('.rw-city-pane');
-
-
-
         buttons.forEach(btn => {
-
-            const isSelected = btn.id === tabId;
-
-            btn.setAttribute('aria-selected', isSelected);
-
-            btn.setAttribute('tabindex', isSelected ? '0' : '-1');
-
+          const isSelected = btn.id === tabId;
+          btn.setAttribute('aria-selected', isSelected);
+          btn.setAttribute('tabindex', isSelected ? '0' : '-1');
         });
-
-
-
         panels.forEach(panel => {
-
-            const controlsId = panel.getAttribute('aria-labelledby');
-
-            if (controlsId === tabId) {
-
-                panel.classList.add('active');
-
-            } else {
-
-                panel.classList.remove('active');
-
-            }
-
+          const controlsId = panel.getAttribute('aria-labelledby');
+          if (controlsId === tabId) {
+            panel.classList.add('active');
+          } else {
+            panel.classList.remove('active');
+          }
         });
+      }
 
-    }
-
-
-
-    // 3. Setup & Event Listeners
-
-    function init() {
-
+      // 3. Setup & Event Listeners
+      function init() {
         const tabList = document.querySelector('.rw-nav-container');
-
         const tabs = document.querySelectorAll('.rw-nav-btn');
-
-
-
-        // Initial Render
-
         Object.keys(resourceData).forEach(city => renderCity(city));
-
-
-
-        // Click Handler
-
         tabList.addEventListener('click', (e) => {
-
-            const btn = e.target.closest('.rw-nav-btn');
-
-            if (!btn) return;
-
-            activateTab(btn.id);
-
-            btn.focus();
-
+          const btn = e.target.closest('.rw-nav-btn');
+          if (!btn) return;
+          activateTab(btn.id);
+          btn.focus();
         });
-
-
-
-        // Keyboard Navigation (Arrow Keys)
-
         tabList.addEventListener('keydown', (e) => {
-
-            let currentTab = document.querySelector('.rw-nav-btn[aria-selected="true"]');
-
-            let nextTab = null;
-
-
-
-            if (!currentTab) {
-
-                currentTab = tabs[0];
-
-                if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
-
-                      e.preventDefault();
-
-                      activateTab(currentTab.id);
-
-                      currentTab.focus();
-
-                      return;
-
-                }
-
+          let currentTab = document.querySelector('.rw-nav-btn[aria-selected="true"]');
+          let nextTab = null;
+          if (!currentTab) {
+            currentTab = tabs[0];
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+              e.preventDefault();
+              activateTab(currentTab.id);
+              currentTab.focus();
+              return;
             }
-
-
-
-            if (e.key === 'ArrowRight') {
-
-                nextTab = currentTab.nextElementSibling || tabs[0];
-
-            } else if (e.key === 'ArrowLeft') {
-
-                nextTab = currentTab.previousElementSibling || tabs[tabs.length - 1];
-
-            }
-
-
-
-            if (nextTab) {
-
-                e.preventDefault();
-
-                activateTab(nextTab.id);
-
-                nextTab.focus();
-
-            }
-
+          }
+          if (e.key === 'ArrowRight') {
+            nextTab = currentTab.nextElementSibling || tabs[0];
+          } else if (e.key === 'ArrowLeft') {
+            nextTab = currentTab.previousElementSibling || tabs[tabs.length - 1];
+          }
+          if (nextTab) {
+            e.preventDefault();
+            activateTab(nextTab.id);
+            nextTab.focus();
+          }
         });
-
-        // Auto-select first tab
-
         activateTab('tab-Portland');
+      }
 
-    }
-
-
-
-    if (document.readyState === 'loading') {
-
+      if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
-
-    } else {
-
+      } else {
         init();
-
-    }
-
-
-
-})();
-
-</script>
-
+      }
+    })();
+  </script>
 </body>
-
 </html>
