@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Resource Directory - Portland, Seattle, Spokane</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+  <style>
+    /* Scoped Root Variable Definition */
+    #resource-widget-root {
+      /* Brand Colors */
+      --rw-white: #ffffff;
+      --rw-slate: #45595a;
+      --rw-dark-slate: #3c504f;
+      --rw-gold: #e9b872;
+
+      /* Typography */
+      --rw-font-heading: 'adobe-caslon-pro', 'Times New Roman', serif;
+      --rw-font-body: 'freight-text-pro', Georgia, serif;
+
+      /* Glass & Lighting */
+      --rw-glass-bg: rgba(255, 255, 255, 0.65);
+      --rw-glass-highlight: rgba(255, 255, 255, 0.95);
+      --rw-glass-border: rgba(255, 255, 255, 0.5);
+      --rw-shadow-soft: 0 8px 32px rgba(60, 80, 79, 0.08);
+      --rw-glow-active: 0 0 25px rgba(233, 184, 114, 0.25);
+      --rw-focus-ring: 0 0 0 2px rgba(233, 184, 114, 0.6);
+
+      /* Animation Timing */
+      --rw-ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --rw-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+      font-family: var(--rw-font-body);
+      color: var(--rw-dark-slate);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    #resource-widget-root *,
+    #resource-widget-root *::before,
+    #resource-widget-root *::after {
+      box-sizing: border-box;
+    }
+
+    /* --- Widget Header --- */
+    .rw-widget-title {
+      font-family: var(--rw-font-heading);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 1.6rem;
+      text-align: center;
+      color: var(--rw-slate);
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      animation: rwFadeIn 0.8s ease forwards;
+    }
+
+    @keyframes rwFadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Navigation Tabs (Tablist) --- */
+    .rw-nav-container {
+      display: flex;
+      justify-content: center;
+      width: fit-content;
+      margin: 0 auto 2rem auto;
+      background: rgba(69, 89, 90, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.5rem;
+      border-radius: 50px;
+      border: 1px solid var(--rw-glass-border);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+      gap: 0.5rem;
+    }
+
+    .rw-nav-btn {
+      background: transparent;
+      border: none;
+      padding: 10px 24px;
+      font-family: var(--rw-font-body);
+      font-weight: 600;
+      color: var(--rw-slate);
+      cursor: pointer;
+      border-radius: 40px;
+      transition: all 0.4s var(--rw-ease-smooth);
+      position: relative;
+      font-size: 1.05rem;
+      outline: none;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      min-width: 100px;
+    }
+
+    .rw-nav-btn:focus-visible {
+      box-shadow: var(--rw-focus-ring);
+    }
+
+    .rw-nav-btn:hover {
+      background: rgba(255,255,255,0.4);
+      color: var(--rw-dark-slate);
+    }
+
+    .rw-nav-btn[aria-selected="true"] {
+      background: var(--rw-white);
+      color: var(--rw-dark-slate);
+      box-shadow: 0 4px 15px rgba(60, 80, 79, 0.05), var(--rw-glow-active);
+      transform: translateY(-1px);
+      font-style: normal;
+    }
+
+    /* --- Main Content Area --- */
+    .rw-content-area {
+      min-height: 50px;
+      position: relative;
+    }
+
+    .rw-city-pane {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .rw-city-pane.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- Accordion Groups --- */
+    .rw-group-node {
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: rwSlideUpFade 0.6s var(--rw-ease-smooth) forwards;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes rwSlideUpFade {
+      from { opacity: 0; transform: translateY(15px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .rw-group-header {
+      width: 100%;
+      background: var(--rw-glass-bg);
+      border: 1px solid var(--rw-glass-border);
+      @supports not (backdrop-filter: blur(10px)) {
+        background: rgba(255, 255, 255, 0.9);
+      }
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 1.1rem 1.8rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      color: var(--rw-dark-slate);
+      outline: none;
+    }
+
+    .rw-group-header:focus-visible {
+      box-shadow: var(--rw-focus-ring);
+      border-color: var(--rw-gold);
+    }
+
+    .rw-group-header:hover {
+      background: var(--rw-glass-highlight);
+      transform: translateY(-2px);
+      box-shadow: var(--rw-shadow-soft);
+      border-color: var(--rw-white);
+    }
+
+    .rw-group-header[aria-expanded="true"] {
+      background: var(--rw-white);
+      border-color: var(--rw-gold);
+      box-shadow: var(--rw-glow-active);
+    }
+
+    .rw-group-title {
+      font-family: var(--rw-font-heading);
+      font-size: 1.25rem;
+      font-weight: 400;
+      pointer-events: none;
+      letter-spacing: 0.02em;
+    }
+
+    .rw-icon-rotator {
+      transition: transform 0.5s var(--rw-ease-spring);
+      color: var(--rw-gold);
+      pointer-events: none;
+      font-size: 1.4rem;
+    }
+
+    .rw-group-header[aria-expanded="true"] .rw-icon-rotator {
+      transform: rotate(90deg);
+    }
+
+    /* --- Accordion Content --- */
+    .rw-group-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.6s var(--rw-ease-spring);
+      overflow: hidden;
+    }
+
+    .rw-group-content-inner {
+      min-height: 0;
+      padding: 0 0.8rem;
+    }
+
+    /* Cards inside the list */
+    .rw-resource-card {
+      background: rgba(255, 255, 255, 0.3);
+      border-left: 2px solid var(--rw-slate);
+      margin: 12px 0;
+      padding: 18px 22px;
+      border-radius: 0 8px 8px 0;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+
+    .rw-group-header[aria-expanded="true"] + .rw-group-content .rw-resource-card {
+      opacity: 1;
+      transform: translateX(0);
+      transition-delay: calc(var(--item-index) * 0.05s);
+    }
+
+    .rw-resource-card:hover {
+      background: var(--rw-white);
+      border-left-color: var(--rw-gold);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .rw-resource-title {
+      font-family: var(--rw-font-heading);
+      font-weight: 400;
+      font-size: 1.15rem;
+      color: var(--rw-dark-slate);
+      margin: 0 0 6px 0;
+    }
+
+    .rw-resource-desc {
+      font-family: var(--rw-font-body);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--rw-slate);
+      margin-bottom: 12px;
+    }
+
+    .rw-resource-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--rw-dark-slate);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(233, 184, 114, 0.15);
+      border-radius: 20px;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .rw-resource-link:focus-visible {
+      box-shadow: var(--rw-focus-ring);
+      outline: none;
+    }
+
+    .rw-resource-link:hover {
+      background: var(--rw-gold);
+      color: var(--rw-white);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 600px) {
+      .rw-nav-container {
+        flex-direction: column;
+        width: 100%;
+        border-radius: 20px;
+        gap: 0.5rem;
+      }
+
+      .rw-nav-btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .rw-widget-title {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="resource-widget-root">
+    <h1 class="rw-widget-title">Community Resources for Your Journey</h1>
+    <nav class="rw-nav-container" role="tablist" aria-label="City Resource Selection">
+      <button id="tab-Portland" class="rw-nav-btn" type="button" role="tab" aria-selected="false" aria-controls="view-Portland" tabindex="0">Portland</button>
+      <button id="tab-Seattle" class="rw-nav-btn" type="button" role="tab" aria-selected="false" aria-controls="view-Seattle" tabindex="-1">Seattle</button>
+      <button id="tab-Spokane" class="rw-nav-btn" type="button" role="tab" aria-selected="false" aria-controls="view-Spokane" tabindex="-1">Spokane</button>
+    </nav>
+    <div class="rw-content-area">
+      <div id="view-Portland" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Portland"></div>
+      <div id="view-Seattle" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Seattle"></div>
+      <div id="view-Spokane" class="rw-city-pane" role="tabpanel" aria-labelledby="tab-Spokane"></div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // --- Data Configuration ---
+      const resourceData = {
+        'Portland': [
+          {
+            header: 'Housing',
+            items: [
+              {
+                title: 'Outside In Shelter',
+                description: 'Emergency overnight shelter with case management services for homeless individuals in Portland.',
+                link: 'https://outsidein.org',
+                linkText: 'outsidein.org'
+              },
+              {
+                title: 'Transition Projects',
+                description: 'Comprehensive housing programs including emergency shelter, transitional housing, and supportive services.',
+                link: 'https://www.transitionprojects.org',
+                linkText: 'transitionprojects.org'
+              },
+              {
+                title: 'Portland Housing Center',
+                description: 'Affordable housing programs and rental assistance for low-income families and individuals.',
+                link: 'https://www.portland-housing.org',
+                linkText: 'portland-housing.org'
+              }
+            ]
+          },
+          {
+            header: 'Food',
+            items: [
+              {
+                title: 'Oregon Food Bank',
+                description: 'Network of food banks providing emergency food assistance throughout Portland and Oregon.',
+                link: 'https://www.oregonfoodbank.org',
+                linkText: 'oregonfoodbank.org'
+              },
+              {
+                title: 'Blanchet House of Hospitality',
+                description: 'Free daily meals and basic support services for those experiencing homelessness and poverty.',
+                link: 'https://www.blanchethouse.org',
+                linkText: 'blanchethouse.org'
+              },
+              {
+                title: 'Community Alliance of Tenants Food Program',
+                description: 'Emergency food assistance and nutrition education for low-income Portland residents.',
+                link: 'https://www.portlandtenants.org',
+                linkText: 'portlandtenants.org'
+              }
+            ]
+          },
+          {
+            header: 'LGBTQ+',
+            items: [
+              {
+                title: 'Basic Rights Oregon',
+                description: 'Support, advocacy, and community resources for LGBTQ+ individuals in Portland and statewide.',
+                link: 'https://www.basicrights.org',
+                linkText: 'basicrights.org'
+              },
+              {
+                title: 'Q Center',
+                description: 'Community center offering social programs, support groups, and resources for LGBTQ+ youth and adults.',
+                link: 'https://www.qcenter.org',
+                linkText: 'qcenter.org'
+              },
+              {
+                title: 'Outside In Health Services',
+                description: 'Affirming healthcare services including primary care and mental health support for LGBTQ+ individuals.',
+                link: 'https://outsidein.org',
+                linkText: 'outsidein.org'
+              }
+            ]
+          },
+          {
+            header: 'Domestic Violence',
+            items: [
+              {
+                title: 'Portland Women\'s Crisis Line',
+                description: 'Crisis support and safety planning for domestic violence survivors. Available 24/7.',
+                link: 'https://www.oregondvhotline.org',
+                linkText: 'oregondvhotline.org'
+              },
+              {
+                title: 'Transition Projects - DV Services',
+                description: 'Emergency shelter and supportive services specifically for domestic violence survivors.',
+                link: 'https://www.transitionprojects.org',
+                linkText: 'transitionprojects.org'
+              },
+              {
+                title: 'Community Alliance of Tenants',
+                description: 'Tenant rights advocacy and resources for those experiencing housing instability due to abuse.',
+                link: 'https://www.portlandtenants.org',
+                linkText: 'portlandtenants.org'
+              }
+            ]
+          },
+          {
+            header: 'Child Abuse',
+            items: [
+              {
+                title: 'Oregon Childhelp National Hotline',
+                description: 'Confidential child abuse hotline providing crisis intervention and counseling referrals.',
+                link: 'https://www.childhelp.org',
+                linkText: 'childhelp.org'
+              },
+              {
+                title: 'Looking Glass Community Mental Health',
+                description: 'Child protective services and family support programs addressing abuse and neglect.',
+                link: 'https://www.lookingglassmd.org',
+                linkText: 'lookingglassmd.org'
+              },
+              {
+                title: 'Department of Human Services Child Welfare',
+                description: 'Oregon DHS child protection, investigation, and family support services.',
+                link: 'https://www.oregon.gov/dhhs',
+                linkText: 'oregon.gov/dhhs'
+              }
+            ]
+          },
+          {
+            header: 'Sexual Assault',
+            items: [
+              {
+                title: 'Portland Rape Victim Advocacy Program (RVAP)',
+                description: 'Confidential support and advocacy for sexual assault survivors. Available 24/7 crisis line.',
+                link: 'https://rapereliefshelter.org',
+                linkText: 'rapereliefshelter.org'
+              },
+              {
+                title: 'Multnomah County Health Services',
+                description: 'Medical advocacy and trauma-informed counseling following sexual assault.',
+                link: 'https://multco.us/health',
+                linkText: 'multco.us/health'
+              },
+              {
+                title: 'Community Alliance Center',
+                description: 'Comprehensive support including counseling and legal advocacy for sexual violence survivors.',
+                link: 'https://www.community-alliance.org',
+                linkText: 'community-alliance.org'
+              }
+            ]
+          }
+        ],
+        'Seattle': [
+          {
+            header: 'Housing',
+            items: [
+              {
+                title: 'Pike Place Market Homeless Outreach Program',
+                description: 'Direct outreach and housing-first services for homeless individuals in downtown Seattle.',
+                link: 'https://www.pikeplacemarket.org',
+                linkText: 'pikeplacemarket.org'
+              },
+              {
+                title: 'Evergreen Treatment Services',
+                description: 'Residential treatment and transitional housing for individuals with substance use and mental health needs.',
+                link: 'https://www.evergreentx.org',
+                linkText: 'evergreentx.org'
+              },
+              {
+                title: 'SHA (Seattle Housing Authority)',
+                description: 'Affordable and public housing options for low-income families and seniors in Seattle.',
+                link: 'https://www.seattlehousing.org',
+                linkText: 'seattlehousing.org'
+              }
+            ]
+          },
+          {
+            header: 'Food',
+            items: [
+              {
+                title: 'Westside Baby Food Bank',
+                description: 'Emergency food assistance and nutrition services for vulnerable families in Seattle.',
+                link: 'https://www.wsbfb.org',
+                linkText: 'wsbfb.org'
+              },
+              {
+                title: 'Chicken Soup Brigade',
+                description: 'Community volunteers providing meals and support to people with serious illness and isolation.',
+                link: 'https://www.chickensoupbrigade.org',
+                linkText: 'chickensoupbrigade.org'
+              },
+              {
+                title: 'Union Gospel Mission',
+                description: 'Free meals, shelter, and comprehensive services for those experiencing homelessness and hunger.',
+                link: 'https://www.ugmseattle.org',
+                linkText: 'ugmseattle.org'
+              }
+            ]
+          },
+          {
+            header: 'LGBTQ+',
+            items: [
+              {
+                title: 'Seattle LGBTQ+ Center',
+                description: 'Community hub offering support services, social programs, and cultural events.',
+                link: 'https://www.seattlelgbtq.org',
+                linkText: 'seattlelgbtq.org'
+              },
+              {
+                title: 'Pride Foundation',
+                description: 'Funding, advocacy, and community resources for LGBTQ+ people and organizations in the Northwest.',
+                link: 'https://pridefoundation.org',
+                linkText: 'pridefoundation.org'
+              },
+              {
+                title: 'Chubb Health Services',
+                description: 'Affirming healthcare including primary care and mental health services for LGBTQ+ individuals.',
+                link: 'https://www.chubbhealth.org',
+                linkText: 'chubbhealth.org'
+              }
+            ]
+          },
+          {
+            header: 'Domestic Violence',
+            items: [
+              {
+                title: 'Seattle Domestic Violence Hotline',
+                description: 'Crisis support, safety planning, and resource referrals available 24/7.',
+                link: 'https://www.dvhotline.org',
+                linkText: 'dvhotline.org'
+              },
+              {
+                title: 'New Beginnings Seattle',
+                description: 'Emergency shelter, counseling, and support services for domestic violence survivors.',
+                link: 'https://www.newbeginningsseattle.org',
+                linkText: 'newbeginningsseattle.org'
+              },
+              {
+                title: 'King County DV Unit',
+                description: 'Law enforcement coordinated response and legal support for domestic violence cases.',
+                link: 'https://kingcounty.gov',
+                linkText: 'kingcounty.gov'
+              }
+            ]
+          },
+          {
+            header: 'Child Abuse',
+            items: [
+              {
+                title: 'Childhelp National Hotline',
+                description: 'Crisis intervention and counseling for child abuse and neglect. Available 24/7.',
+                link: 'https://www.childhelp.org',
+                linkText: 'childhelp.org'
+              },
+              {
+                title: 'DCFS (Department of Children, Family, and Services)',
+                description: 'Washington state child protective services and family support programs.',
+                link: 'https://www.dshs.wa.gov',
+                linkText: 'dshs.wa.gov'
+              },
+              {
+                title: 'Pioneer Human Services',
+                description: 'Integrated treatment and supportive services for families at risk of child maltreatment.',
+                link: 'https://www.pioneerhuman.org',
+                linkText: 'pioneerhuman.org'
+              }
+            ]
+          },
+          {
+            header: 'Sexual Assault',
+            items: [
+              {
+                title: 'Harborview Abuse & Trauma Services',
+                description: 'Medical care, advocacy, and counseling for sexual assault survivors with trauma-informed approach.',
+                link: 'https://www.haborviewmedicalcenter.org',
+                linkText: 'haborviewmedicalcenter.org'
+              },
+              {
+                title: 'King County Sexual Assault Hotline',
+                description: 'Crisis support and resource information for sexual assault survivors. Available 24/7.',
+                link: 'https://www.kcmo.wa.gov',
+                linkText: 'kcmo.wa.gov'
+              },
+              {
+                title: 'Community Health Plan Sexual Assault Program',
+                description: 'Specialized advocacy and mental health services for survivors of sexual violence.',
+                link: 'https://www.chpw.org',
+                linkText: 'chpw.org'
+              }
+            ]
+          }
+        ],
+        'Spokane': [
+          {
+            header: 'Housing',
+            items: [
+              {
+                title: 'Spokane Shelter',
+                description: 'Emergency overnight shelter providing warm beds and basic services for homeless individuals.',
+                link: 'https://www.spokaneshelter.org',
+                linkText: 'spokaneshelter.org'
+              },
+              {
+                title: 'Catholic Charities Housing',
+                description: 'Affordable and transitional housing programs for low-income families and vulnerable individuals.',
+                link: 'https://www.cceasternwa.org',
+                linkText: 'cceasternwa.org'
+              },
+              {
+                title: 'Spokane Housing Authority',
+                description: 'Public and subsidized housing assistance for eligible low-income households.',
+                link: 'https://www.sha.org',
+                linkText: 'sha.org'
+              }
+            ]
+          },
+          {
+            header: 'Food',
+            items: [
+              {
+                title: 'Spokane Food Lifeline',
+                description: 'Food bank and nutrition assistance serving Spokane County and surrounding areas.',
+                link: 'https://www.foodlifeline.org',
+                linkText: 'foodlifeline.org'
+              },
+              {
+                title: 'Gospel Rescue Mission Spokane',
+                description: 'Free meals, shelter, and recovery services for those experiencing homelessness and hunger.',
+                link: 'https://www.grm.org',
+                linkText: 'grm.org'
+              },
+              {
+                title: 'Second Harvest Spokane',
+                description: 'Food security programs and nutrition education for vulnerable Spokane families.',
+                link: 'https://www.secondharvestspokane.org',
+                linkText: 'secondharvestspokane.org'
+              }
+            ]
+          },
+          {
+            header: 'LGBTQ+',
+            items: [
+              {
+                title: 'Spokane Pride Center',
+                description: 'Community center offering support groups, social events, and advocacy for LGBTQ+ community.',
+                link: 'https://www.spokanepride.org',
+                linkText: 'spokanepride.org'
+              },
+              {
+                title: 'Empire Health Foundation LGBTQ Programs',
+                description: 'Healthcare and wellness resources affirming LGBTQ+ identities in Eastern Washington.',
+                link: 'https://www.empirehealth.org',
+                linkText: 'empirehealth.org'
+              },
+              {
+                title: 'Community Health Plan LGBTQ Services',
+                description: 'Comprehensive healthcare and mental health services for LGBTQ+ individuals.',
+                link: 'https://www.chpw.org',
+                linkText: 'chpw.org'
+              }
+            ]
+          },
+          {
+            header: 'Domestic Violence',
+            items: [
+              {
+                title: 'National Domestic Violence Hotline',
+                description: 'Crisis support and safety planning for domestic violence survivors. Available 24/7.',
+                link: 'https://www.thehotline.org',
+                linkText: 'thehotline.org'
+              },
+              {
+                title: 'Spokane Domestic Violence Shelter',
+                description: 'Emergency shelter and comprehensive services for women and children fleeing abuse.',
+                link: 'https://www.dvshelterspokane.org',
+                linkText: 'dvshelterspokane.org'
+              },
+              {
+                title: 'Spokane Police Victim Services',
+                description: 'Victim advocacy and support services coordinated with law enforcement response.',
+                link: 'https://www.spokanecity.org',
+                linkText: 'spokanecity.org'
+              }
+            ]
+          },
+          {
+            header: 'Child Abuse',
+            items: [
+              {
+                title: 'Childhelp National Child Abuse Hotline',
+                description: 'Immediate crisis intervention and counseling referrals for child abuse situations.',
+                link: 'https://www.childhelp.org',
+                linkText: 'childhelp.org'
+              },
+              {
+                title: 'DCFS Eastern Washington Regional Office',
+                description: 'Washington state child protective services and family support for Spokane County.',
+                link: 'https://www.dshs.wa.gov',
+                linkText: 'dshs.wa.gov'
+              },
+              {
+                title: 'Spokane County Child Advocacy Center',
+                description: 'Coordinated response to child abuse with medical, investigation, and counseling services.',
+                link: 'https://www.spokanecounty.org',
+                linkText: 'spokanecounty.org'
+              }
+            ]
+          },
+          {
+            header: 'Sexual Assault',
+            items: [
+              {
+                title: 'RAINN National Sexual Assault Hotline',
+                description: 'Confidential support and local resource referrals for sexual assault survivors.',
+                link: 'https://www.rainn.org',
+                linkText: 'rainn.org'
+              },
+              {
+                title: 'Spokane Sexual Assault Support Services',
+                description: 'Advocacy, counseling, and medical services for survivors of sexual assault and abuse.',
+                link: 'https://www.spokanepolice.org',
+                linkText: 'spokanepolice.org'
+              },
+              {
+                title: 'Providence Health Sexual Assault Nurse Examiner',
+                description: 'Medical care, evidence collection, and trauma-informed support following sexual assault.',
+                link: 'https://www.providence.org',
+                linkText: 'providence.org'
+              }
+            ]
+          }
+        ]
+      };
+
+      // --- Logic ---
+      // 1. Render content (DOM Construction)
+      function renderCity(cityName) {
+        const container = document.getElementById(`view-${cityName}`);
+        const data = resourceData[cityName];
+        if (!data) return;
+
+        data.forEach((group, index) => {
+          // Container
+          const node = document.createElement('div');
+          node.className = 'rw-group-node';
+          node.style.setProperty('--delay', `${index * 0.1}s`);
+
+          // Accessible Button Header
+          const header = document.createElement('button');
+          header.className = 'rw-group-header';
+          header.type = 'button';
+          header.setAttribute('aria-expanded', 'false');
+          header.innerHTML = `
+            <span class="rw-group-title">${group.header}</span>
+            <span class="material-symbols-rounded rw-icon-rotator">chevron_right</span>
+          `;
+
+          // Content Wrapper
+          const content = document.createElement('div');
+          content.className = 'rw-group-content';
+          const contentInner = document.createElement('div');
+          contentInner.className = 'rw-group-content-inner';
+
+          // List Items
+          group.items.forEach((item, i) => {
+            const card = document.createElement('div');
+            card.className = 'rw-resource-card';
+            card.style.setProperty('--item-index', i);
+            card.innerHTML = `
+              <h3 class="rw-resource-title">${item.title}</h3>
+              <div class="rw-resource-desc">${item.description}</div>
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="rw-resource-link">
+                ${item.linkText || 'Visit Website'}
+                <span class="material-symbols-rounded" style="font-size:14px">open_in_new</span>
+              </a>
+            `;
+            contentInner.appendChild(card);
+          });
+
+          content.appendChild(contentInner);
+
+          // Modified Event Listener for "One at a Time" Accordion
+          header.addEventListener('click', () => {
+            const isCurrentlyOpen = header.getAttribute('aria-expanded') === 'true';
+            // Close all other items in this view
+            const allHeaders = container.querySelectorAll('.rw-group-header');
+            const allContents = container.querySelectorAll('.rw-group-content');
+            allHeaders.forEach(h => h.setAttribute('aria-expanded', 'false'));
+            allContents.forEach(c => c.style.gridTemplateRows = '0fr');
+            // Toggle the clicked one
+            if (!isCurrentlyOpen) {
+              header.setAttribute('aria-expanded', 'true');
+              content.style.gridTemplateRows = '1fr';
+            }
+          });
+
+          node.appendChild(header);
+          node.appendChild(content);
+          container.appendChild(node);
+        });
+      }
+
+      // 2. Tab Switching Logic
+      function activateTab(tabId) {
+        const buttons = document.querySelectorAll('.rw-nav-btn');
+        const panels = document.querySelectorAll('.rw-city-pane');
+        buttons.forEach(btn => {
+          const isSelected = btn.id === tabId;
+          btn.setAttribute('aria-selected', isSelected);
+          btn.setAttribute('tabindex', isSelected ? '0' : '-1');
+        });
+        panels.forEach(panel => {
+          const controlsId = panel.getAttribute('aria-labelledby');
+          if (controlsId === tabId) {
+            panel.classList.add('active');
+          } else {
+            panel.classList.remove('active');
+          }
+        });
+      }
+
+      // 3. Setup & Event Listeners
+      function init() {
+        const tabList = document.querySelector('.rw-nav-container');
+        const tabs = document.querySelectorAll('.rw-nav-btn');
+        // Initial Render
+        Object.keys(resourceData).forEach(city => renderCity(city));
+        // Click Handler
+        tabList.addEventListener('click', (e) => {
+          const btn = e.target.closest('.rw-nav-btn');
+          if (!btn) return;
+          activateTab(btn.id);
+          btn.focus();
+        });
+        // Keyboard Navigation (Arrow Keys)
+        tabList.addEventListener('keydown', (e) => {
+          let currentTab = document.querySelector('.rw-nav-btn[aria-selected="true"]');
+          let nextTab = null;
+          if (!currentTab) {
+            currentTab = tabs[0];
+            if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+              e.preventDefault();
+              activateTab(currentTab.id);
+              currentTab.focus();
+              return;
+            }
+          }
+          if (e.key === 'ArrowRight') {
+            nextTab = currentTab.nextElementSibling || tabs[0];
+          } else if (e.key === 'ArrowLeft') {
+            nextTab = currentTab.previousElementSibling || tabs[tabs.length - 1];
+          }
+          if (nextTab) {
+            e.preventDefault();
+            activateTab(nextTab.id);
+            nextTab.focus();
+          }
+        });
+        // Auto-select first tab
+        activateTab('tab-Portland');
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
